@@ -1,0 +1,5 @@
+{{- if eq .chezmoi.hostname "lightspeed" }}
+alias battery='cat /sys/class/power_supply/BAT1/capacity'
+{{- end}}
+
+alias shutdown='sudo systemctl poweroff'
