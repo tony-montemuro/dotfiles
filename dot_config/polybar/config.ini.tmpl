@@ -52,7 +52,7 @@ font-0 = mononoki:size=10;2
 
 modules-left = memory cpu filesystem
 modules-center = xworkspaces
-modules-right = xkeyboard pulseaudio battery date backlight
+modules-right = xkeyboard pulseaudio {{ if eq .chezmoi.hostname "lightspeed" }}battery{{ end }} date backlight
 
 cursor-click = pointer
 cursor-scroll = ns-resize
@@ -180,11 +180,13 @@ date-alt = %Y-%m-%d %l:%M:%S %p
 label = %date%
 label-foreground = ${colors.primary}
 
+{{- if eq .chezmoi.hostname "lightspeed" }}
 [module/battery]
 type = internal/battery
 battery = BAT1
 adapter = ACAD8
 label-full = %percentage_raw%% (Full)
+{{- end }}
 
 [module/backlight]
 type = internal/backlight
