@@ -3,3 +3,8 @@
 #
 
 [[ -f ~/.bashrc ]] && . ~/.bashrc
+
+# Variables
+export EDITOR=nvim
+export GITHUB_USERNAME=tony-montemuro
+export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent.socket
