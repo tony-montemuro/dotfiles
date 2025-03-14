@@ -187,6 +187,11 @@ bindsym $mod+r mode "resize"
 # Launch polybar (status bar)
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 
+{{ if eq .chezmoi.hostname "blue-space" }}
+# Execute script on login
+exec --no-startup-id ~/.config/monitors.sh
+{{- end }}
+
 # Hide borders on single-window workspaces
 hide_edge_borders smart
 

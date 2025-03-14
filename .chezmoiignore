@@ -1,0 +1,3 @@
+{{- if ne .chezmoi.hostname "blue-space" }}
+.config/monitors.sh
+{{- end }}
