@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Terminate already running bar instances
+polybar-msg cmd quit
+
+{{ if eq .chezmoi.hostname "blue-space" }}
+polybar --list-monitors | while IFS=$'\n' read line; do
+	monitor=$(echo $line | cut -d ':' -f1)
+	primary=$(echo $line | cut -d ' ' -f3)
+	if [[ $primary == *"primary"* ]]; then
+		MONITOR=$monitor polybar --reload primary &
+	else
+		MONITOR=$monitor polybar --reload example &
+	fi
+done
+{{ else }}
+polybar --reload example &
+{{ end }}

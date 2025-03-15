@@ -58,8 +58,8 @@ cursor-click = pointer
 cursor-scroll = ns-resize
 
 enable-ipc = true
+monitor = ${env:MONITOR:}
 
-tray-position = right
 ; override-redirect = true
 
 ; wm-restack = generic
@@ -76,6 +76,13 @@ tray-position = right
 ; be quite random.
 ; For more information, see the documentation page for this module:
 ; https://polybar.readthedocs.io/en/stable/user/modules/tray.html
+
+{{ if eq .chezmoi.hostname "blue-space" }}
+[bar/primary]
+inherit = bar/example
+modules-right = xkeyboard pulseaudio date backlight tray
+{{- end }}
+
 [module/systray]
 type = internal/tray
 
@@ -199,6 +206,9 @@ bar-width = 10
 bar-indicator = |
 bar-fill = ─ 
 bar-empty = .
+
+[module/tray]
+type = internal/tray
 
 [settings]
 screenchange-reload = true
