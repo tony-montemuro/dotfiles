@@ -3,6 +3,14 @@ assign [class="^Google-chrome$"] 1
 assign [class="^discord$"] 4
 assign [class="^Spotify$"] 5
 
+{{ if eq .chezmoi.hostname "blue-space" }}
+# Assign workspaces to monitors
+workspace 1 output primary
+workspace 2 output DP-2
+workspace 4 output primary
+workspace 5 output primary
+{{- end }}
+
 # Launch applications on launch
 # exec --no-startup-id i3-msg 'workspace 2; exec kitty'
 

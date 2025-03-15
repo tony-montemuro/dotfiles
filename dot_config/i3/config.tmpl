@@ -183,6 +183,10 @@ mode "resize" {
 }
 
 bindsym $mod+r mode "resize"
+{{- if eq .chezmoi.hostname "blue-space" }}
+bindsym $mod+x move workspace to output next
+{{ end }}
+
 
 # Launch polybar (status bar)
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
