@@ -49,10 +49,13 @@ module-margin = 1
 separator = |
 separator-foreground = ${colors.disabled}
 
-font-0 = mononoki:size=10;2
+font-0 = mononoki:size=10;3
+font-1 = Font Awesome 6 Brands,Font Awesome 6 Brands Regular:style=Regular:size=12;3
+font-2 = Font Awesome 6 Free,Font Awesome 6 Free Solid:style=Solid:size=12;3
+font-3 = Font Awesome 6 v4 Compatibility,Font Awesome v4 Compatibility Regular:style=Regular:size=12;3
 
-modules-left = memory cpu filesystem
-modules-center = xworkspaces
+modules-left = cpu memory wired-network {{- if eq .chezmoi.hostname "lightspeed" }}wireless-network{{ end }}
+modules-center = i3
 modules-right = xkeyboard pulseaudio {{- if eq .chezmoi.hostname "lightspeed" }}battery{{ end }} date {{ if eq .chezmoi.hostname "lightspeed"}}backlight{{ end }}
 
 cursor-click = pointer
@@ -109,31 +112,42 @@ label-empty = %name%
 label-empty-foreground = ${colors.disabled}
 label-empty-padding = 1
 
+[module/i3]
+type = internal/i3
+
+index-sort = true
+enable-scroll = false
+
+label-focused = %name%
+label-focused-background = ${colors.background-alt}
+label-focused-underline = ${colors.primary}
+label-focused-padding = 1
+
+label-unfocused = %name%
+label-unfocused-padding = 1
+
+label-visible = %name%
+label-visible-padding = 1
+
+label-urgent = %name%
+label-urgent-padding = 1
+
 [module/xwindow]
 type = internal/xwindow
 label = %title:0:60:...%
 
-[module/filesystem]
-type = internal/fs
-interval = 25
-
-mount-0 = /
-
-label-mounted = %{F#F0C674}%mountpoint%%{F-} %percentage_used%%
-
-label-unmounted = %mountpoint% not mounted
-label-unmounted-foreground = ${colors.disabled}
-
 [module/pulseaudio]
 type = internal/pulseaudio
 
-format-volume-prefix = "VOL "
-format-volume-prefix-foreground = ${colors.primary}
-format-volume = <label-volume>
+format-volume = <ramp-volume> <label-volume>
 
 label-volume = %percentage%%
 
-label-muted = muted
+ramp-volume-0 = 
+ramp-volume-1 = 
+ramp-volume-2 = 
+
+label-muted =  MUTED
 label-muted-foreground = ${colors.disabled}
 
 [module/xkeyboard]
@@ -150,43 +164,49 @@ label-indicator-background = ${colors.secondary}
 [module/memory]
 type = internal/memory
 interval = 2
-format-prefix = "RAM "
-format-prefix-foreground = ${colors.primary}
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground}
 label = %percentage_used:2%%
 
 [module/cpu]
 type = internal/cpu
 interval = 2
-format-prefix = "CPU "
-format-prefix-foreground = ${colors.primary}
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground}
 label = %percentage:2%%
 
-[network-base]
+[base/network]
 type = internal/network
+interface = {{ .wired_dev }}
 interval = 5
+
 format-connected = <label-connected>
+label-connected =  %upspeed%  %downspeed%
+
 format-disconnected = <label-disconnected>
-label-disconnected = %{F#F0C674}%ifname%%{F#707880} disconnected
+label-disconnected =  NO SIGNAL
 
-[module/wlan]
-inherit = network-base
-interface-type = wireless
-label-connected = %{F#F0C674}%ifname%%{F-} %essid% %local_ip%
+{{- if eq .chezmoi.hostname "lightspeed" }}
+[module/wireless-network]
+inherit = base/network
+interface = {{ .wireless_dev }}
+{{ end }}
 
-[module/eth]
-inherit = network-base
-interface-type = wired
-label-connected = %{F#F0C674}%ifname%%{F-} %local_ip%
+[module/wired-network]
+inherit = base/network
+interface = {{ .wired_dev }}
 
 [module/date]
 type = internal/date
 interval = 1
 
-date = %Y-%m-%d %l:%M %p
-date-alt = %Y-%m-%d %l:%M:%S %p
+date =  %Y-%m-%d
+date-alt =  %Y-%m-%d
+time = %l:%M %p
+time-alt = %l:%M:%S %p
 
-label = %date%
-label-foreground = ${colors.primary}
+label = %date%  %time%
+label-foreground = ${colors.foreground}
 
 {{- if eq .chezmoi.hostname "lightspeed" }}
 [module/battery]
