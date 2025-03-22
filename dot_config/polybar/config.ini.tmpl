@@ -4,6 +4,7 @@ background-alt = #373B41
 foreground = #C5C8C6
 primary = #F0C674
 blue = #4169E1
+green = #50c878
 red = #e64553
 
 [bar/example]
@@ -37,7 +38,7 @@ font-3 = Font Awesome 6 v4 Compatibility,Font Awesome v4 Compatibility Regular:s
 
 modules-left = spotify spotify-prev spotify-play-pause spotify-next
 modules-center = i3
-modules-right = xkeyboard pulseaudio wired-network{{ if .device.wireless.enabled }} wireless-network{{ end }}{{ if .device.battery.enabled }} battery{{ end }} date time {{ if not .multihead.enabled }}tray{{ end }}
+modules-right = xkeyboard wired-network{{ if .device.wireless.enabled }} wireless-network{{ end }}{{ if .device.battery.enabled }} battery{{ end }} pulseaudio date time {{ if not .multihead.enabled }}tray{{ end }}
 
 cursor-click = pointer
 cursor-scroll = ns-resize
@@ -56,7 +57,7 @@ monitor = ${env:MONITOR:}
 {{ if .multihead.enabled }}
 [bar/primary]
 inherit = bar/example
-modules-right = xkeyboard pulseaudio wired-network date time tray
+modules-right = xkeyboard wired-network pulseaudio date time tray
 {{- end }}
 
 [module/systray]
@@ -73,7 +74,13 @@ enable-scroll = false
 
 label-focused = %name%
 label-focused-background = ${colors.background-alt}
-label-focused-underline = ${colors.blue}
+label-focused-underline = {{ if eq .theme.color "blue" -}}
+${colors.blue}
+{{ else if eq .theme.color "green" -}}
+${colors.green}
+{{ else -}}
+${colors.primary}
+{{ end -}}
 label-focused-padding = 1
 
 label-unfocused = %name%
@@ -126,7 +133,7 @@ format-connected = <label-connected>
 label-connected =  %upspeed%  %downspeed%
 
 format-disconnected = <label-disconnected>
-label-disconnected =  NO SIGNAL
+label-disconnected =
 
 {{- if .device.wireless.enabled }}
 [module/wireless-network]
@@ -152,6 +159,7 @@ tail = true
 interval = 1
 format-prefix = 
 format-prefix-padding = 10px
+format-prefix-padding-left = 0
 format = <label>
 format-padding = 10px
 exec = ~/.config/polybar/polybar-spotify/scroll_spotify_status.sh
@@ -204,19 +212,38 @@ format-padding = 10px
 {{- if .device.battery.enabled }}
 [module/battery]
 type = internal/battery
-battery = BAT1
-adapter = ACAD8
+battery = {{ .device.battery.name }}
+adapter = {{ .device.battery.adapter }} 
 label-full = %percentage_raw%% (Full)
 
+format-charging = <animation-charging> <label-charging>
 format-charging-padding = 10px
+
+format-discharging = <ramp-capacity> <label-discharging>
 format-discharging-padding = 10px
+
+format-full = <ramp-capacity> <label-full>
 format-full-padding = 10px
-format-low-padding = 10px
+
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
+animation-charging-framerate = 750
 {{ end }}
 
 [module/tray]
 type = internal/tray
-format-padding = 10px
+format-padding = 7px
+format-padding-right = 0
+tray-padding = 3px
 
 [settings]
 screenchange-reload = true
