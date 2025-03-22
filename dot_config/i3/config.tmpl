@@ -183,7 +183,7 @@ mode "resize" {
 }
 
 bindsym $mod+r mode "resize"
-{{- if eq .chezmoi.hostname "blue-space" }}
+{{- if .multihead.enabled }}
 bindsym $mod+x move workspace to output next
 {{ end }}
 
@@ -191,7 +191,7 @@ bindsym $mod+x move workspace to output next
 # Launch polybar (status bar)
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 
-{{ if eq .chezmoi.hostname "blue-space" }}
+{{ if .multihead.enabled }}
 # Execute script on login
 exec --no-startup-id ~/.config/monitors.sh
 {{- end }}
@@ -206,7 +206,7 @@ exec_always --no-startup-id picom -b
 hide_edge_borders smart
 
 # Colors
-{{- if eq .chezmoi.hostname "lightspeed" }}
+{{- if eq .theme.color "green" }}
 client.focused #82d682 #65a765 #ffffff #2e9ef4 #65a765
 {{- end }}
 

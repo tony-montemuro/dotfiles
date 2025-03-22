@@ -37,7 +37,7 @@ font-3 = Font Awesome 6 v4 Compatibility,Font Awesome v4 Compatibility Regular:s
 
 modules-left = spotify spotify-prev spotify-play-pause spotify-next
 modules-center = i3
-modules-right = xkeyboard pulseaudio wired-network {{- if eq .chezmoi.hostname "lightspeed" }}wireless-network battery backlight{{ end }} date time {{- if eq .chezmoi.hostname "lightspeed" }}tray{{ end }}
+modules-right = xkeyboard pulseaudio wired-network{{ if .device.wireless.enabled }} wireless-network{{ end }}{{ if .device.battery.enabled }} battery{{ end }} date time {{ if not .multihead.enabled }}tray{{ end }}
 
 cursor-click = pointer
 cursor-scroll = ns-resize
@@ -53,7 +53,7 @@ monitor = ${env:MONITOR:}
 
 ; override-redirect = true
 
-{{ if eq .chezmoi.hostname "blue-space" }}
+{{ if .multihead.enabled }}
 [bar/primary]
 inherit = bar/example
 modules-right = xkeyboard pulseaudio wired-network date time tray
@@ -119,7 +119,7 @@ label-indicator-background = ${colors.red}
 
 [base/network]
 type = internal/network
-interface = {{ .wired_dev }}
+; interface = {{ .device.wired }}
 interval = 5
 
 format-connected = <label-connected>
@@ -128,10 +128,10 @@ label-connected =  %upspeed%  %downspeed%
 format-disconnected = <label-disconnected>
 label-disconnected =  NO SIGNAL
 
-{{- if eq .chezmoi.hostname "lightspeed" }}
+{{- if .device.wireless.enabled }}
 [module/wireless-network]
 inherit = base/network
-interface = {{ .wireless_dev }}
+interface = {{ .device.wireless.name }}
 
 format-connected-padding = 10px
 format-disconnected-padding = 10px
@@ -140,7 +140,7 @@ format-packetloss-padding = 10px
 
 [module/wired-network]
 inherit = base/network
-interface = {{ .wired_dev }}
+interface = {{ .device.wired }}
 
 format-connected-padding = 10px
 format-disconnected-padding = 10x
@@ -201,7 +201,7 @@ label-foreground = ${colors.foreground}
 
 format-padding = 10px
 
-{{- if eq .chezmoi.hostname "lightspeed" }}
+{{- if .device.battery.enabled }}
 [module/battery]
 type = internal/battery
 battery = BAT1
@@ -212,19 +212,6 @@ format-charging-padding = 10px
 format-discharging-padding = 10px
 format-full-padding = 10px
 format-low-padding = 10px
-
-[module/backlight]
-type = internal/backlight
-card = intel_backlight
-use-actual-backlight = true
-enable-scroll = false
-scroll-interval = 10
-format = <bar>
-bar-width = 10
-bar-indicator = |
-bar-fill = ─ 
-bar-empty = .
-format-background = 10px
 {{ end }}
 
 [module/tray]

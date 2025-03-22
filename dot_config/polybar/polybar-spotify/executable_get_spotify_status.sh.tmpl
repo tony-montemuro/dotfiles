@@ -2,7 +2,7 @@
 
 # The name of polybar bar which houses the main spotify module and the control modules.
 PARENT_BAR="example"
-{{- if eq .chezmoi.hostname "blue-space" }}
+{{- if .multihead.enabled }}
 PARENT_BAR_2="primary"
 PARENT_BAR_PID=$(pgrep -a "polybar" | grep -E "$PARENT_BAR|$PARENT_BAR_2" | cut -d" " -f1)
 {{ else }}

@@ -3,7 +3,7 @@
 # Terminate already running bar instances
 polybar-msg cmd quit
 
-{{ if eq .chezmoi.hostname "blue-space" }}
+{{ if .multihead.enabled }}
 polybar --list-monitors | while IFS=$'\n' read line; do
 	monitor=$(echo $line | cut -d ':' -f1)
 	primary=$(echo $line | cut -d ' ' -f3)

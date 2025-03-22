@@ -1,5 +1,5 @@
-{{- if eq .chezmoi.hostname "lightspeed" }}
-alias battery='cat /sys/class/power_supply/BAT1/capacity'
+{{ if .device.battery.enabled }}
+alias battery='cat /sys/class/power_supply/{{ .device.battery.name }}/capacity'
 {{ end}}
 alias shutdown='sudo systemctl poweroff'
 alias screenshot='flameshot gui'
