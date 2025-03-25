@@ -18,6 +18,7 @@ vim.opt.rtp:prepend(lazypath)
 -- Set vim settings necessary before loading lazy.nvim
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
+vim.opt.conceallevel = 1
 
  -- Setup lazy.nvim
 require("lazy").setup({
