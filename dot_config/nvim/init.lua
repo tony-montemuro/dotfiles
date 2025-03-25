@@ -4,6 +4,7 @@ vim.opt.tabstop = 4
 vim.opt.softtabstop = 0
 vim.opt.expandtab = false
 vim.opt.shiftwidth = 4
+vim.opt.clipboard = "unnamedplus"
 
 -- Keybinds for executing Lua from within the editor
 vim.keymap.set("n", "<leader><leader>x", "<cmd>source %<CR>")
