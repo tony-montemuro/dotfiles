@@ -1,8 +1,9 @@
 require("config.lazy")
 
-vim.cmd("set tabstop=4")
-vim.cmd("set softtabstop=0 noexpandtab")
-vim.cmd("set shiftwidth=4")
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 0
+vim.opt.expandtab = false
+vim.opt.shiftwidth = 4
 
 -- Keybinds for executing Lua from within the editor
 vim.keymap.set("n", "<leader><leader>x", "<cmd>source %<CR>")
@@ -17,3 +18,4 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 		vim.highlight.on_yank()
 	end
 })
+
