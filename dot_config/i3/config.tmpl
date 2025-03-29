@@ -197,7 +197,11 @@ exec --no-startup-id ~/.config/monitors.sh
 {{- end }}
 
 # Set wallpaper
+{{- if .multihead.enabled }}
+exec_always --no-startup-id "sh -c 'sleep 2; exec feh --randomize --bg-scale ~/wallpapers'"
+{{- else }}
 exec_always --no-startup-id feh --randomize --bg-scale ~/wallpapers
+{{- end }}
 
 # Start compositor
 exec_always --no-startup-id picom -b
