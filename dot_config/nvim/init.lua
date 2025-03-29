@@ -13,6 +13,10 @@ vim.keymap.set("n", "grr", vim.lsp.buf.references)
 vim.keymap.set("n", "gra", vim.lsp.buf.code_action)
 vim.keymap.set("n", "grn", vim.lsp.buf.rename)
 
+-- Keybinds for quickfix
+vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
+vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
+
 -- Highlight when yanking text
 vim.api.nvim_create_autocmd('TextYankPost', {
     desc = 'Highlight when yanking (copying) text',
