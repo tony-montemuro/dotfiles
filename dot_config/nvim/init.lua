@@ -8,11 +8,6 @@ vim.keymap.set("n", "<leader><leader>x", "<cmd>source %<CR>")
 vim.keymap.set("n", "<leader>x", ":.lua<CR>")
 vim.keymap.set("v", "<leader>x", ":lua<CR>")
 
--- Keybinds for LSP
-vim.keymap.set("n", "grr", vim.lsp.buf.references)
-vim.keymap.set("n", "gra", vim.lsp.buf.code_action)
-vim.keymap.set("n", "grn", vim.lsp.buf.rename)
-
 -- Keybinds for quickfix
 vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
 vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
@@ -25,3 +20,33 @@ vim.api.nvim_create_autocmd('TextYankPost', {
         vim.highlight.on_yank()
     end
 })
+
+-- Enable LSP servers
+vim.lsp.enable({ 'lua' })
+
+-- Autocommand that enables features based on LSP client capabilities
+vim.api.nvim_create_autocmd('LspAttach', {
+    callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if not client then
+            return
+        end
+
+        -- Enable auto completion, if possible
+        if client:supports_method('textDocument/completion') then
+            vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
+        end
+
+        -- Format the current buffer on save
+        if client:supports_method('textDocument/formatting') then
+            vim.api.nvim_create_autocmd('BufWritePre', {
+                callback = function()
+                    vim.lsp.buf.format({ bufnr = args.buf, id = client.id })
+                end
+            })
+        end
+    end
+})
+
+-- Useful for autocomplete
+vim.cmd('set completeopt+=noselect')
