@@ -22,7 +22,7 @@ return {
             })
 
             -- Set keybind to open mini icon viewer
-            vim.keymap.set('n', '<leader>ft', '<cmd>:lua MiniFiles.open()<CR>')
+            vim.keymap.set('n', '<leader>d', '<cmd>:lua MiniFiles.open()<CR>')
         end
     },
 }
