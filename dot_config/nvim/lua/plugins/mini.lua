@@ -4,11 +4,9 @@ return {
         version = false,
         config = function()
             local statusline = require 'mini.statusline'
-            local icons = require 'mini.icons'
             local files = require 'mini.files'
 
             statusline.setup { use_icons = true }
-            icons.setup()
             files.setup({
                 mappings = {
                     synchronize = 'w'
