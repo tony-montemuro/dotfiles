@@ -32,11 +32,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
             return
         end
 
-        -- Enable auto completion, if possible
-        if client:supports_method('textDocument/completion') then
-            vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
-        end
-
         -- Format the current buffer on save
         if client:supports_method('textDocument/formatting') then
             vim.api.nvim_create_autocmd('BufWritePre', {
