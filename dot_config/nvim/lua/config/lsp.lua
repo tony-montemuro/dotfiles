@@ -52,4 +52,4 @@ vim.api.nvim_create_autocmd('LspAttach', {
 vim.cmd('set completeopt+=noselect')
 
 -- Enable virtual text
-vim.diagnostic.config({ virutal_text = true })
+vim.diagnostic.config({ virtual_lines = { current_line = true } })

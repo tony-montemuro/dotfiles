@@ -3,6 +3,7 @@ require("config.lsp")
 
 vim.opt.shiftwidth = 4
 vim.opt.clipboard = "unnamedplus"
+vim.cmd('set number relativenumber')
 
 -- Keybinds for executing Lua from within the editor
 vim.keymap.set("n", "<leader><leader>x", "<cmd>source %<CR>")
