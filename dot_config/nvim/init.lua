@@ -1,4 +1,5 @@
 require("config.lazy")
+require("config.lsp")
 
 vim.opt.shiftwidth = 4
 vim.opt.clipboard = "unnamedplus"
@@ -20,28 +21,3 @@ vim.api.nvim_create_autocmd('TextYankPost', {
         vim.highlight.on_yank()
     end
 })
-
--- Enable LSP servers
-vim.lsp.enable({ 'lua' })
-
--- Autocommand that enables features based on LSP client capabilities
-vim.api.nvim_create_autocmd('LspAttach', {
-    callback = function(args)
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
-        if not client then
-            return
-        end
-
-        -- Format the current buffer on save
-        if client:supports_method('textDocument/formatting') then
-            vim.api.nvim_create_autocmd('BufWritePre', {
-                callback = function()
-                    vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf(), id = client.id })
-                end
-            })
-        end
-    end
-})
-
--- Useful for autocomplete
-vim.cmd('set completeopt+=noselect')
