@@ -12,7 +12,11 @@ return {
                     "query",
                     "markdown",
                     "markdown_inline",
-                    "go"
+                    "go",
+                    "javascript",
+                    "typescript",
+                    "html",
+                    "css"
                 },
                 auto_install = false,
                 highlight = {

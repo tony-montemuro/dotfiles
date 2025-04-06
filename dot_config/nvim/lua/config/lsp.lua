@@ -1,7 +1,8 @@
 -- Enable LSP servers
 vim.lsp.enable({
     'lua',
-    'go'
+    'go',
+    'typescript'
 })
 
 -- Autocommand that enables features based on LSP client capabilities
@@ -44,6 +45,27 @@ vim.api.nvim_create_autocmd('LspAttach', {
                     vim.lsp.buf.format({ async = false })
                 end
             })
+        end
+
+        -- JS/TS formatting settings
+        if client ~= nil and client.name == "typescript" then
+            local filetype = vim.bo.filetype
+            local format_settings = { convertTabsToSpaces = true, indentStyle = 'Smart' }
+
+            local indentSize = 4
+            if filetype:match("react") ~= nil then
+                indentSize = 2
+            end
+            format_settings.indentSize = indentSize
+
+            local settings = {}
+            if filetype:match("typescript") then
+                settings = { typescript = { format = format_settings } }
+            else
+                settings = { javascript = { format = format_settings } }
+            end
+
+            client.notify("workspace/didChangeConfiguration", { settings = settings })
         end
     end
 })
