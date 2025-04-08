@@ -55,6 +55,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
             local indentSize = 4
             if filetype:match("react") ~= nil then
                 indentSize = 2
+                format_settings.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces = true
             end
             format_settings.indentSize = indentSize
 
