@@ -13,6 +13,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
             return
         end
 
+        -- Keybinds
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition)
+
         -- Format the current buffer on save
         if client:supports_method('textDocument/formatting') then
             vim.api.nvim_create_autocmd('BufWritePre', {
