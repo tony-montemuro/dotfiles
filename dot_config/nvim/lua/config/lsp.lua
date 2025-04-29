@@ -2,7 +2,9 @@
 vim.lsp.enable({
     'lua',
     'go',
-    'typescript'
+    'typescript',
+    'svelte',
+    'tailwindcss'
 })
 
 -- Autocommand that enables features based on LSP client capabilities

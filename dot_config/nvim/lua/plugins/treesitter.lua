@@ -17,7 +17,8 @@ return {
                     "javascript",
                     "typescript",
                     "html",
-                    "css"
+                    "css",
+                    "svelte"
                 },
                 auto_install = false,
                 highlight = {
