@@ -4,7 +4,8 @@ vim.lsp.enable({
     'go',
     'typescript',
     'svelte',
-    'tailwindcss'
+    'tailwindcss',
+    'css'
 })
 
 -- Autocommand that enables features based on LSP client capabilities
@@ -51,6 +52,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
                 end
             })
         end
+
+        local f = io.open("/tmp/save.txt", "w")
+        f:write(client.name)
+        f:close()
 
         -- JS/TS formatting settings
         if client ~= nil and client.name == "typescript" then
