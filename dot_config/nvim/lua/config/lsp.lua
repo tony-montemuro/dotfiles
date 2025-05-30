@@ -4,6 +4,7 @@ vim.lsp.enable({
     'go',
     'typescript',
     'svelte',
+    'html',
     'tailwindcss',
     'css'
 })
