@@ -14,3 +14,7 @@ if [ -f ~/.bash_aliases ]; then
 fi
 
 source /usr/share/nvm/init-nvm.sh
+
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:$PATH
+export GOBIN=$GOPATH/bin
