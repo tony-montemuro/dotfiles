@@ -6,7 +6,8 @@ vim.lsp.enable({
     'svelte',
     'html',
     'tailwindcss',
-    'css'
+    'css',
+    'deno'
 })
 
 -- Autocommand that enables features based on LSP client capabilities
@@ -20,13 +21,18 @@ vim.api.nvim_create_autocmd('LspAttach', {
         -- Keybinds
         vim.keymap.set('n', 'gd', vim.lsp.buf.definition)
 
-        -- Format the current buffer on save
+        -- Format the current buffer on save (default)
         if client:supports_method('textDocument/formatting') then
             vim.api.nvim_create_autocmd('BufWritePre', {
                 callback = function()
-                    if vim.bo.filetype ~= "go" then
-                        vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf(), id = client.id })
+                    if vim.bo.filetype == "go" then
+                        return
                     end
+                    if client.name == "deno" then
+                        return
+                    end
+
+                    vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf(), id = client.id })
                 end
             })
         end
@@ -54,9 +60,32 @@ vim.api.nvim_create_autocmd('LspAttach', {
             })
         end
 
-        local f = io.open("/tmp/save.txt", "w")
-        f:write(client.name)
-        f:close()
+        -- Deno config to support `demo fmt`
+        vim.api.nvim_create_autocmd('BufWritePre', {
+            pattern = { '*.ts', '*.tsx', '*.js', '*.jsx', '*.mjs', '*.cjs' },
+            callback = function(args)
+                if client.name ~= "deno" then
+                    return
+                end
+
+                local bufnr = args.buf
+                local ext = vim.fn.expand('%:e')
+                local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+                local input = table.concat(lines, '\n') .. '\n'
+
+                local result = vim.system({ 'deno', 'fmt', '--ext', ext, '-' }, { stdin = input }):wait()
+
+                if result.code == 0 and result.stdout and #result.stdout > 0 then
+                    local formatted = vim.split(result.stdout, '\n')
+                    if formatted[#formatted] == '' then
+                        table.remove(formatted) -- drop trailing blank line from split
+                    end
+                    vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, formatted)
+                else
+                    vim.notify('deno fmt failed:\n' .. (result.stderr or 'unknown error'), vim.log.levels.WARN)
+                end
+            end,
+        })
 
         -- JS/TS formatting settings
         if client ~= nil and client.name == "typescript" then
