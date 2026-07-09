@@ -3,6 +3,7 @@ require("config.lazy")
 require("config.lsp")
 
 vim.opt.shiftwidth = 4
+vim.opt.foldlevel = 99
 vim.opt.clipboard = "unnamedplus"
 vim.cmd('set number relativenumber')
 
