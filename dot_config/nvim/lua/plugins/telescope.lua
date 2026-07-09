@@ -1,7 +1,7 @@
 return {
     {
         'nvim-telescope/telescope.nvim',
-        tag = '0.1.8',
+        version = '*',
         dependencies = {
             'nvim-lua/plenary.nvim',
             { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' }
@@ -20,20 +20,29 @@ return {
 
             require('telescope').load_extension('fzf')
 
-            vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags)
-            vim.keymap.set('n', '<leader>fd', require('telescope.builtin').find_files)
-            vim.keymap.set('n', '<leader>en', function()
-                require('telescope.builtin').find_files {
+            local builtin = require('telescope.builtin')
+            vim.keymap.set('n', '<leader>fd', builtin.find_files, { desc = 'Telescope find files' })
+            vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
+            vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
+            vim.keymap.set('n', '<leader>fc', function()
+                builtin.find_files {
                     cwd = vim.fn.stdpath("config")
                 }
-            end)
-            vim.keymap.set('n', '<leader>ep', function()
-                require('telescope.builtin').find_files {
-                    cwd = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy")
+            end, { desc = 'Telescope find system config files' })
+            vim.keymap.set('n', '<leader>hfd', function()
+                builtin.find_files {
+                    hidden = true
                 }
-            end)
+            end, { desc = 'Telescope find files (with hidden files)' })
+            vim.keymap.set('n', '<leader>afd', function()
+                builtin.find_files {
+                    hidden = true,
+                    no_ignore = true
+                }
+            end, { desc = 'Telescope find files (all files)' })
 
-            require 'config.telescope.multigrep'.setup()
+
+            -- require 'config.telescope.multigrep'.setup()
         end
     }
 }
