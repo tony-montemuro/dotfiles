@@ -75,8 +75,6 @@ return {
             -- LSP pickers
             vim.keymap.set('n', '<leader>lr', builtin.lsp_references, { desc = 'LSP references' })
             vim.keymap.set('n', '<leader>gi', builtin.lsp_implementations, { desc = 'LSP implementations' })
-
-            -- require 'config.telescope.multigrep'.setup()
         end
     }
 }
