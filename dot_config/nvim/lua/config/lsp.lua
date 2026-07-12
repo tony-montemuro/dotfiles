@@ -28,7 +28,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
                     if vim.bo.filetype == "go" then
                         return
                     end
-                    if client.name == "deno" then
+                    if client.name == "deno" or client.name == "typescript" then
                         return
                     end
 
@@ -92,12 +92,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
             local filetype = vim.bo.filetype
             local format_settings = { convertTabsToSpaces = true, indentStyle = 'Smart' }
 
-            local indentSize = 4
             if filetype:match("react") ~= nil then
-                indentSize = 2
                 format_settings.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces = true
             end
-            format_settings.indentSize = indentSize
 
             local settings = {}
             if filetype:match("typescript") then
