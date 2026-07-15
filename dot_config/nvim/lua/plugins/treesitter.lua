@@ -15,7 +15,9 @@ return {
                 "go",
                 "gotmpl",
                 "javascript",
+                "javascriptreact",
                 "typescript",
+                "typescriptreact",
                 "html",
                 "css",
                 "svelte"
