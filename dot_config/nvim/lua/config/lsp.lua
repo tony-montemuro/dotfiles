@@ -28,7 +28,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
                     if vim.bo.filetype == "go" then
                         return
                     end
-                    if client.name == "deno" or client.name == "typescript" then
+                    if client.name == "deno" then
                         return
                     end
 
