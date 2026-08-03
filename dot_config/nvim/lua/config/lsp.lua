@@ -2,6 +2,7 @@
 vim.lsp.enable({
     'lua',
     'go',
+    'c',
     'typescript',
     'svelte',
     'html',
