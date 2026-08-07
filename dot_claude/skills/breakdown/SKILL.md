@@ -4,6 +4,8 @@ description: Take an idea that requires a huge amount of work, and break it down
 disable-model-invocation: true
 ---
 
+# Breakdown
+
 A loose idea has arrived, and it's unclear how the idea can be transformed into 
 a workable solution. Breakdown is the process of taking one idea, and breaking 
 that idea down into multiple useful, workable items.
@@ -19,61 +21,52 @@ The following should be done in order:
 
 ### Identify the epic
 
+Read `/home/tony/.claude/skills/trackers/README.md`, and the matching adapter
+file. The README states how to find the tracker and the team, and it defines the
+repository file `.claude/issue-tracker.md`.
+
+`.claude/issue-tracker.md` names two kinds. The **epic kind** is the one this
+skill works on. The **work kind** is the one every slice is created as. When the
+file does not exist, or does not name them, take the kinds the adapter uses to
+group work and to hold a unit of work, and confirm both with the user.
+
 **If a URL is provided:** 
 
-- Parse the host 
-- Read `/home/tony/.claude/skills/trackers/README.md`, and the matching adapter 
-file. 
 - `resolve` the URL.
-   - If `resolve` does *not* resolve `kind` to `project`, stop and ask for a
-   project URL.
+   - If `resolve` does *not* return the epic kind, stop and ask for a URL of
+   that kind.
 
 **If an idea in prose is provided:** 
 
-- Use the following methods, in order, to discover the issue tracker:
-   1. An explicit repository file: `.claude/issue-tracker.md`. This file should
-   clearly state the issue tracker used, as well as the team name. Read it once:
-   a hit here answers the team chain below as well.
-   2. Evidence of use in the recent history. Run `git log -50 --pretty=%s`, and
-   list the recent branch names, then look for:
-      - `ABC-123` in a commit subject or a branch name, which points to Linear
-      or Jira, and which also names the team.
-      - `#123`, or `Fixes #123`, which points to GitHub Issues.
-   3. Ask the user. Offer only the trackers that have an adapter file.
-- Use the following methods, in order, to discover the team:
-   1. An explicit repository file: `.claude/issue-tracker.md`.
-   2. The `ABC-123` keys already found in the history above. A key that appears
-   repeatedly is a strong match against a team.
-   3. Try to match details of the repository with the existing team names.
-   4. Ask the user.
-- Read `/home/tony/.claude/skills/trackers/README.md`, and the matching adapter 
-file. 
-- Execute `find_epic` on the idea. If there are near matches, confirm with
-the user if any of them are a true match.
+- Execute `find_item`, with the epic kind and a few keywords from the idea. If
+there are near matches, confirm with the user if any of them are a true match.
    - A confirmed match becomes the epic: take its `id` and `kind`, and treat the
    input as an Epic URL from here on.
-   - No match means the epic does not exist yet: `id` = none, and `kind` = 
-   `project`, to be created later.
+   - No match means the epic does not exist yet: `id` = none, and `kind` = the
+   epic kind, to be created later.
 
 ### Establish the current state
 
 This applies to both cases above.
 
-- If the epic exists, call `read_epic` and `list_children`. Specify to the user
+- If the epic exists, call `read_item` and `list_children`. Specify to the user
 whether this is a first run or re-run. An epic that does not exist yet is a
 first run by definition.
 - If the epic does not concern this repository, stop and ask the user to
 confirm. Treat it as a mismatch when the epic names services, components, or
 repositories that do not exist here.
 - If the repo does not include a `.claude/issue-tracker.md` file, offer to
-create it, including the tracker name & team name.
+create it from the template beside the README.
 - At the end of this process, you should have the following information:
    - The primary input of this skill: the contents of the epic, or the prose
    provided by the user when the epic does not exist yet
    - `tracker`
-   - `kind` = `project` 
+   - `kind` = the epic kind
+   - The work kind, for the slices
    - `id`, or none when the epic is still to be created
    - `team`
+   - The template for the epic kind, when `.claude/issue-tracker.md` defines one
+   - The guidance for the epic kind, when the file defines it
 
 ## Align on the why
 
@@ -123,6 +116,9 @@ the slice. A slice should NOT include any of the following:
    - User stories
    - Acceptance criteria
    - Estimates
+- A slice does not follow the template of its kind, and the guidance for that
+kind does not apply here either. Filling both is the work of the `operationalize`
+skill, one slice at a time.
 - Order the slices. Identify dependencies between them, and any slices that
 can be solved in parallel.
 - Perform a classification of all slices, new and existing. New slices should
@@ -156,6 +152,22 @@ epic into multiple epics.
    - If there are critiques, use your best judgement to incorporate them
   into what you have, and repeat.
    - If the user flat out rejects your work, stop the skill, it's over. 
+- The description of the epic follows the template for the epic kind, when
+`.claude/issue-tracker.md` defines one:
+   - Reproduce the headings of the template exactly, in its order, with every
+   heading present even when a section is short. Include any fixed text the
+   template body places inside a section.
+   - Read the guidance for a section immediately before writing that section. The
+   `## Guidance: <epic kind>` section of the same file holds it, with one `###`
+   heading per template heading.
+      - Guidance is optional. A heading with no guidance is filled with
+      judgement.
+      - A `###` heading that matches no template heading is stale. Report it, and
+      continue.
+   - Never copy the guidance itself into the epic. It describes how to fill a
+   section; it is not content.
+- Respect the `## Conventions` section of the same file, for the epic and for
+every slice.
 - Assumptions live in the epic's description, as a running log. The log is
 never wiped: it is the record of what was believed at each pass of planning.
 Each assumption is a single line, with the date it was first recorded and its
@@ -174,12 +186,13 @@ each one against the assumptions from this run:
 - Anchor each of these on the single line it changes. Do not rewrite the whole
 assumptions section to change one entry.
 - Once the assumptions are reconciled, write everything in this order:
-   1. If the epic already exists, execute `update_epic`. Otherwise, execute
-   `create_epic`.
-   2. Per slice, execute the verb its classification calls for:
-      - "create": `create_child`
-      - "update": `update_child`
-      - "delete": `delete_child`
+   1. If the epic already exists, execute `update_item`. Otherwise, execute
+   `create_item`.
+   2. Per slice, execute the verb its classification calls for. Every slice is
+   created with the work kind, and with the epic as its parent:
+      - "create": `create_item`
+      - "update": `update_item`
+      - "delete": `delete_item`
       - "leave alone": nothing
    3. Execute `set_dependency` per edge. Slices created in step 2 only have an
    id once they exist, so this always comes last.
