@@ -123,7 +123,7 @@ to push, rather than describing work that is not there yet.
 ## Creating the guidance file
 
 When `.claude/upsert-pr.md` does not exist, offer to write it from
-`template.md`, beside this file. `example-guidance.md` shows a filled one.
+`template.md`, beside this file.
 
 Never write the file without the user's agreement, and never block the pull
 request on it. If the user declines, or wants it later, continue with the
